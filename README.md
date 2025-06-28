@@ -45,3 +45,44 @@ sudo apt install dosfstools
  ```
  sudo umount mnt
  ```
+ ```
+ sudo apt install qemu-system-x86
+ ```
+ ```
+ sudo apt install ovmf
+ ```
+ ```
+ mkdir -p $HOME/osbook/devenv
+ ```
+ ```
+ cp /usr/share/OVMF/OVMF_CODE_4M.fd $HOME/osbook/devenv/
+ ```
+ ```
+ cp /usr/share/OVMF/OVMF_VARS_4M.fd $HOME/osbook/devenv/
+ ```
+ ```
+ qemu-system-x86_64 \
+    -k ja \
+    -drive if=pflash,file=$HOME/osbook/devenv/OVMF_CODE_4M.fd \
+    -drive if=pflash,file=$HOME/osbook/devenv/OVMF_VARS_4M.fd \
+    -hda disk.img
+```
+```
+cd $HOME/osbook/day01/c
+```
+```
+sudo apt install clang
+```
+```
+clang -target x86_64-pc-win32-coff \
+    -mno-red-zone -fno-stack-protector -fshort-wchar -Wall -c hello.c
+```
+```
+sudo apt install lld
+```
+```
+lld-link /subsystem:efi_application /entry:EfiMain /out:hello.efi hello.o
+```
+```
+$HOME/osbook/devenv/run_qemu.sh hello.efi
+```
